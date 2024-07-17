@@ -40,11 +40,11 @@ services:
       - "kafka:34.255.205.168"
     networks:
       - kafka-net
-  kafka-ui:
+  kafka-ui2:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
     ports:
-      - 8090:8090
+      - 8080:8080
     environment:
       DYNAMIC_CONFIG_ENABLED: 'true'
     volumes:
