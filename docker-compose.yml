@@ -1,4 +1,7 @@
 version: "3"
+networks:
+  kafka-net:
+    driver: bridge
 
 services:
   odb1:
