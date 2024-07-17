@@ -15,6 +15,11 @@ services:
     ports:
       - 2480:2480
       - 2424:2424
+    deploy:
+      resources:
+        limits:
+          memory: 1.5g
+
 
   zookeeper:
     image: 'bitnami/zookeeper:latest'
