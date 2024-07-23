@@ -4,17 +4,39 @@ networks:
     driver: bridge
 
 services:
-  odb1:
-    image: orientdb:3.2.31
-    command: dserver.sh
+  cassandra:
+    image: cassandra:3.11
+    container_name: cassandra
     environment:
-      ORIENTDB_ROOT_PASSWORD: root
-      ORIENTDB_NODE_NAME: odb1
-      ORIENTDB_OPTS_MEMORY : -Xms1212m -Xmx1612m
-      ORIENTDB_CACHE_LOCAL_SIZE: 1256MB
+      - CASSANDRA_CLUSTER_NAME=janusgraph
+      - CASSANDRA_DC=datacenter1
+      - CASSANDRA_RACK=rack1
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
     ports:
-      - 2480:2480
-      - 2424:2424
+      - "9042:9042"
+
+  janusgraph:
+    image: janusgraph/janusgraph:0.6.2
+    container_name: janusgraph
+    environment:
+      - JANUS_STORAGE_BACKEND=cql
+      - JANUS_STORAGE_HOSTS=cassandra
+      - JANUS_STORAGE_CQL_KEYSPACE=janusgraph
+    depends_on:
+      - cassandra
+    ports:
+      - "8182:8182"
+
+  janusgraph-ui:
+    image: fengzeliu/janusgraph-ui:latest
+    container_name: janusgraph-ui
+    environment:
+      - JANUSGRAPH_ENDPOINT=http://janusgraph:8182
+    depends_on:
+      - janusgraph
+    ports:
+      - "5000:5000"
+
 
   zookeeper:
     image: wurstmeister/zookeeper
