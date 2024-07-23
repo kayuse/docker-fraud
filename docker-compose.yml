@@ -4,19 +4,34 @@ networks:
     driver: bridge
 
 services:
+
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=janusgraph
+      - CASSANDRA_DC=datacenter1
+      - CASSANDRA_RACK=rack1
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=256M
+    ports:
+      - "9042:9042"
   janusgraph:
-    image: janusgraph/janusgraph:0.6.2
+    image: janusgraph/janusgraph:latest
     container_name: janusgraph
     environment:
-      - storage.backend=berkeleyje
-      - storage.directory=/var/lib/janusgraph/db
+      - storage.backend=cql
+      - storage.hostname=cassandra
+      - storage.cql.keyspace=janusgraph
+      - JANUSGRAPH_MAX_HEAP_SIZE=1g
       - JAVA_OPTIONS=-Xms1G -Xmx2G
     ports:
       - "8182:8182"
     volumes:
       - janusgraph-data:/var/lib/janusgraph/db
-
-
+    depends_on:
+      - cassandra
 
   gremlin-ui:
     image: prabushitha/gremlin-visualizer:latest
@@ -59,8 +74,6 @@ services:
       - POSTGRES_PASSWORD=S3cret
       - POSTGRES_USER=citizix_user
       - POSTGRES_DB=fraud
-
-
 
 volumes:
   janusgraph-data:
