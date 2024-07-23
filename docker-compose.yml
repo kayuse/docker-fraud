@@ -30,7 +30,7 @@ services:
 
   janusgraph:
     image: janusgraph/janusgraph:latest
-    container_name: janusgraph
+    container_name: janusgraph2
     environment:
       - storage.backend=berkeleyje
       - storage.directory=/var/lib/janusgraph/db
