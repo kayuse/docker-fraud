@@ -27,14 +27,13 @@ services:
     ports:
       - "8182:8182"
 
-  gremlin-console:
-    image: tinkerpop/gremlin-console:3.5.2
-    container_name: gremlin-console
-    entrypoint: ["/bin/sh", "-c", "sleep 10 && /opt/gremlin-console/bin/gremlin.sh"]
+  gremlin-ui:
+    image: prabushitha/gremlin-visualizer:latest
+    container_name: gremlin-visualizer
     depends_on:
       - janusgraph
-    tty: true
-
+    ports:
+      - "3000:3000"
 
   zookeeper:
     image: wurstmeister/zookeeper
