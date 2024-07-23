@@ -39,6 +39,10 @@ services:
       - "8182:8182"
     volumes:
       - janusgraph-data:/var/lib/janusgraph/db
+    deploy:
+      resources:
+        limits:
+          memory: 2g
 
   gremlin-ui:
     image: prabushitha/gremlin-visualizer:latest
