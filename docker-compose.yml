@@ -9,17 +9,21 @@ services:
     image: cassandra:latest
     container_name: cassandra
     restart: always
-    mem_limit: 1g  # Adjust based on Cassandra's memory requirements
+    resources:
+      limits:
+        memory: 1g  # Adjust based on Cassandra's memory requirements
     ports:
       - "9042:9042"  # Expose
-      
+
   janusgraph:
     image: your-janusgraph-image  # Replace with your JanusGraph image
     container_name: janusgraph
     restart: always
     environment:
       JAVA_OPTS: "-Xms1g -Xmx2g -XX:+UseG1GC"  # Adjust heap size as needed
-    mem_limit: 3.5g  # Leave some headroom for JanusGraph and Docker overhead
+    resources:
+      limits:
+        memory: 3.5g # Leave some headroom for JanusGraph and Docker overhead
     volumes:
       - ./conf:/opt/janusgraph/conf  # Mount configuration directory
     ports:
