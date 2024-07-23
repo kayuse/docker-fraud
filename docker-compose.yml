@@ -4,24 +4,30 @@ networks:
     driver: bridge
 
 services:
-
   cassandra:
-    image: cassandra:latest
+    image: cassandra:3.11
     container_name: cassandra
-    restart: always  # Adjust based on Cassandra's memory requirements
+    environment:
+      - CASSANDRA_CLUSTER_NAME=janusgraph
+      - CASSANDRA_DC=datacenter1
+      - CASSANDRA_RACK=rack1
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
     ports:
-      - "9042:9042"  # Expose
+      - "9042:9042"
 
   janusgraph:
-    image: your-janusgraph-image  # Replace with your JanusGraph image
+    image: janusgraph/janusgraph:0.6.2
     container_name: janusgraph
-    restart: always
     environment:
-      JAVA_OPTS: "-Xms1g -Xmx2g -XX:+UseG1GC"  # Adjust heap size as needed# Leave some headroom for JanusGraph and Docker overhead
-    volumes:
-      - ./conf:/opt/janusgraph/conf  # Mount configuration directory
+      - JANUS_STORAGE_BACKEND=cql
+      - JANUS_STORAGE_HOSTS=cassandra
+      - JANUS_STORAGE_CQL_KEYSPACE=janusgraph
+      - JANUSGRAPH_MAX_HEAP_SIZE=2g
+      - "JAVA_OPTS=-Xms1g -Xmx2g -XX:+UseG1GC" 
+    depends_on:
+      - cassandra
     ports:
-      - "8182:8182"  # Expose JanusGraph Gremlin port
+      - "8182:8182"
 
 
 
