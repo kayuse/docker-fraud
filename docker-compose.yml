@@ -31,8 +31,6 @@ services:
   gremlin-ui:
     image: prabushitha/gremlin-visualizer:latest
     container_name: gremlin-visualizer
-    depends_on:
-      - janusgraph
     ports:
       - "3000:3000"
 
