@@ -27,15 +27,15 @@ services:
     ports:
       - "8182:8182"
 
-  janusgraph-ui:
-    image: fengzeliu/janusgraph-ui:latest
-    container_name: janusgraph-ui
+  noctua:
+    image: dslab-usc/noctua:latest
+    container_name: noctua
     environment:
-      - JANUSGRAPH_ENDPOINT=http://janusgraph:8182
+      - GREMLIN_SERVER_URL=ws://janusgraph:8182/gremlin
     depends_on:
       - janusgraph
     ports:
-      - "5000:5000"
+      - "4000:4000"
 
 
   zookeeper:
