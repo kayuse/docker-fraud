@@ -27,15 +27,13 @@ services:
     ports:
       - "8182:8182"
 
-  noctua:
-    image: dslab-usc/noctua:latest
-    container_name: noctua
-    environment:
-      - GREMLIN_SERVER_URL=ws://janusgraph:8182/gremlin
+  gremlin-console:
+    image: kelvinlawson/gremlin-console:latest
+    container_name: gremlin-console
     depends_on:
       - janusgraph
     ports:
-      - "4000:4000"
+      - "8183:8183"
 
 
   zookeeper:
