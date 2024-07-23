@@ -4,28 +4,29 @@ networks:
     driver: bridge
 
 services:
-  cassandra:
-    image: cassandra:3.11
-    container_name: cassandra
-    environment:
-      - CASSANDRA_CLUSTER_NAME=janusgraph
-      - CASSANDRA_DC=datacenter1
-      - CASSANDRA_RACK=rack1
-      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-    ports:
-      - "9042:9042"
+  # cassandra:
+  #   image: cassandra:3.11
+  #   container_name: cassandra
+  #   environment:
+  #     - CASSANDRA_CLUSTER_NAME=janusgraph
+  #     - CASSANDRA_DC=datacenter1
+  #     - CASSANDRA_RACK=rack1
+  #     - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+  #   ports:
+  #     - "9042:9042"
 
-  janusgraph:
-    image: janusgraph/janusgraph:0.6.2
-    container_name: janusgraph
-    environment:
-      - JANUS_STORAGE_BACKEND=cql
-      - JANUS_STORAGE_HOSTS=cassandra
-      - JANUS_STORAGE_CQL_KEYSPACE=janusgraph
-    depends_on:
-      - cassandra
-    ports:
-      - "8182:8182"
+  # janusgraph:
+  #   image: janusgraph/janusgraph:0.6.2
+  #   container_name: janusgraph
+  #   environment:
+  #     - JANUS_STORAGE_BACKEND=cql
+  #     - JANUS_STORAGE_HOSTS=cassandra
+  #     - JANUS_STORAGE_CQL_KEYSPACE=janusgraph
+  #     - JANUSGRAPH_MAX_HEAP_SIZE=2g
+  #   depends_on:
+  #     - cassandra
+  #   ports:
+  #     - "8182:8182"
 
   gremlin-ui:
     image: prabushitha/gremlin-visualizer:latest
