@@ -28,6 +28,18 @@ services:
   #   ports:
   #     - "8182:8182"
 
+  janusgraph:
+    image: janusgraph/janusgraph:latest
+    container_name: janusgraph
+    environment:
+      - storage.backend=berkeleyje
+      - storage.directory=/var/lib/janusgraph/db
+      - JANUSGRAPH_MAX_HEAP_SIZE=2g
+    ports:
+      - "8182:8182"
+    volumes:
+      - janusgraph-data:/var/lib/janusgraph/db
+
   gremlin-ui:
     image: prabushitha/gremlin-visualizer:latest
     container_name: gremlin-visualizer
