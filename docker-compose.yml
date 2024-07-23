@@ -15,21 +15,37 @@ services:
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
       - MAX_HEAP_SIZE=512M
       - HEAP_NEWSIZE=256M
+      - CASSANDRA_USERNAME=cassandra
+      - CASSANDRA_PASSWORD=cassandra
     ports:
       - "9042:9042"
   janusgraph:
     image: janusgraph/janusgraph:latest
     container_name: janusgraph
     environment:
-      - storage.backend=cql
+      - storage.backend=cassandra
       - storage.hostname=cassandra
-      - storage.cql.keyspace=janusgraph
+      - storage.port=9042
+      - storage.cql.keyspace=mykeyspace
+      - storage.cassandra.username=cassandra
+      - storage.cassandra.password=cassandra
       - JANUSGRAPH_MAX_HEAP_SIZE=1g
       - JAVA_OPTIONS=-Xms1G -Xmx2G
     ports:
       - "8182:8182"
     volumes:
       - janusgraph-data:/var/lib/janusgraph/db
+    depends_on:
+      - cassandra
+  datastax-studio:
+    image: datastax/ds-studio:latest
+    container_name: datastax-studio
+    environment:
+      - DS_STUDIO_AUTH_ENABLED=true
+      - DS_STUDIO_AUTH_USERNAME=admin
+      - DS_STUDIO_AUTH_PASSWORD=adminpassword
+    ports:
+      - "9091:9091"
     depends_on:
       - cassandra
 
