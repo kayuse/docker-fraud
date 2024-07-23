@@ -37,23 +37,7 @@ services:
       - janusgraph-data:/var/lib/janusgraph/db
     depends_on:
       - cassandra
-  datastax-studio:
-    image: datastax/ds-studio:latest
-    container_name: datastax-studio
-    environment:
-      - DS_STUDIO_AUTH_ENABLED=true
-      - DS_STUDIO_AUTH_USERNAME=admin
-      - DS_STUDIO_AUTH_PASSWORD=adminpassword
-    ports:
-      - "9091:9091"
-    depends_on:
-      - cassandra
 
-  gremlin-ui:
-    image: prabushitha/gremlin-visualizer:latest
-    container_name: gremlin-visualizer
-    ports:
-      - "3000:3000"
 
   zookeeper:
     image: wurstmeister/zookeeper
