@@ -18,7 +18,13 @@ services:
       - CASSANDRA_USERNAME=cassandra
       - CASSANDRA_PASSWORD=cassandra
     ports:
-      - "9042:9042"
+      - "9042:9042"  # Cassandra default port
+    networks:
+      - janusgraph-network
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+      - cassandra-config:/etc/cassandra
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:latest
     container_name: elasticsearch
@@ -51,11 +57,14 @@ services:
       - JANUSGRAPH_MAX_HEAP_SIZE=1g
       - JAVA_OPTIONS=-Xms1G -Xmx2G
     ports:
-      - "8182:8182"
-    volumes:
-      - janusgraph-data:/var/lib/janusgraph/db
+      - "8182:8182"  # Gremlin Server default port
+    networks:
+      - janusgraph-network
     depends_on:
       - cassandra
+      - elasticsearch
+    volumes:
+      - janusgraph-config:/janusgraph/config
 
   zookeeper:
     image: wurstmeister/zookeeper
@@ -94,4 +103,7 @@ services:
       - POSTGRES_DB=fraud
 
 volumes:
-  janusgraph-data:
+  cassandra-data:
+  cassandra-config:
+  elasticsearch-data:
+  janusgraph-config:
