@@ -4,17 +4,40 @@ networks:
     driver: bridge
 
 services:
-  odb1:
-    image: orientdb:3.2.31
-    command: dserver.sh
+
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
     environment:
-      ORIENTDB_ROOT_PASSWORD: root
-      ORIENTDB_NODE_NAME: odb1
-      ORIENTDB_OPTS_MEMORY : -Xms1212m -Xmx1612m
-      ORIENTDB_CACHE_LOCAL_SIZE: 1256MB
+      - CASSANDRA_CLUSTER_NAME=janusgraph
+      - CASSANDRA_DC=datacenter1
+      - CASSANDRA_RACK=rack1
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=256M
+      - CASSANDRA_USERNAME=cassandra
+      - CASSANDRA_PASSWORD=cassandra
     ports:
-      - 2480:2480
-      - 2424:2424
+      - "9042:9042"
+  
+  janusgraph:
+    image: janusgraph/janusgraph:latest
+    container_name: janusgraph
+    environment:
+      - storage.backend=cassandra
+      - storage.hostname=cassandra
+      - storage.port=9042
+      - storage.cql.keyspace=mykeyspace
+      - storage.cassandra.username=cassandra
+      - storage.cassandra.password=cassandra
+      - JANUSGRAPH_MAX_HEAP_SIZE=1g
+      - JAVA_OPTIONS=-Xms1G -Xmx2G
+    ports:
+      - "8182:8182"
+    volumes:
+      - janusgraph-data:/var/lib/janusgraph/db
+    depends_on:
+      - cassandra
 
   zookeeper:
     image: wurstmeister/zookeeper
@@ -51,4 +74,6 @@ services:
       - POSTGRES_PASSWORD=S3cret
       - POSTGRES_USER=citizix_user
       - POSTGRES_DB=fraud
-  
+
+volumes:
+  janusgraph-data:
