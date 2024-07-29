@@ -48,6 +48,7 @@ services:
     environment:
       - storage.backend=cassandra
       - storage.hostname=cassandra
+      - graph.replace-instance-if-exists=true
       - storage.port=9042
       - storage.cql.keyspace=mykeyspace
       - storage.cassandra.username=cassandra
