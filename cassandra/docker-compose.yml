@@ -1,0 +1,74 @@
+version: "3"
+networks:
+  kafka-net:
+    driver: bridge
+  janusgraph-network:
+    driver: bridge
+  rabbitmq_go_net:
+    driver: bridge
+
+services:
+
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=janusgraph
+      - CASSANDRA_DC=datacenter1
+      - CASSANDRA_RACK=rack1
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=256M
+      - CASSANDRA_USERNAME=cassandra
+      - CASSANDRA_PASSWORD=cassandra
+    ports:
+      - "9042:9042"  # Cassandra default port
+    networks:
+      - janusgraph-network
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+      - cassandra-config:/etc/cassandra
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.22
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - ELASTICSEARCH_USERNAME=myuser
+      - ELASTICSEARCH_PASSWORD=mypassword
+    ports:
+      - "9200:9200"  # Elasticsearch default port
+    networks:
+      - janusgraph-network
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+      
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+        - rabbitmq_go_net
+
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=S3cret
+      - POSTGRES_USER=citizix_user
+      - POSTGRES_DB=fraud
+
+volumes:
+  cassandra-data:
+  cassandra-config:
+  elasticsearch-data:
+  janusgraph-config:
