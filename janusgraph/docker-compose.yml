@@ -1,10 +1,6 @@
 version: "3"
 networks:
-  kafka-net:
-    driver: bridge
   janusgraph-network:
-    driver: bridge
-  rabbitmq_go_net:
     driver: bridge
 
 services:
@@ -14,18 +10,18 @@ services:
     container_name: janusgraph
     environment:
       - storage.backend=cassandra
-      - storage.hostname=cassandra
+      - storage.hostname=48.217.122.65
       - graph.replace-instance-if-exists=true
       - storage.port=9042
       - storage.cql.keyspace=mykeyspace
       - storage.cassandra.username=cassandra
       - storage.cassandra.password=cassandra
       - INDEX_BACKEND=elasticsearch
-      - INDEX_HOSTNAME=elasticsearch
+      - INDEX_HOSTNAME=48.217.122.65
       - INDEX_ELASTICSEARCH_USER=myuser
       - INDEX_ELASTICSEARCH_PASSWORD=mypassword
-      - JANUSGRAPH_MAX_HEAP_SIZE=1g
-      - JAVA_OPTIONS=-Xms1G -Xmx2G
+      - JANUSGRAPH_MAX_HEAP_SIZE=3g
+      - JAVA_OPTIONS=-Xms3G -Xmx4G
     ports:
       - "8182:8182"  # Gremlin Server default port
     networks:
@@ -36,31 +32,7 @@ services:
     volumes:
       - janusgraph-config:/janusgraph/config
 
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    container_name: 'rabbitmq'
-    ports:
-        - 5672:5672
-        - 15672:15672
-    volumes:
-        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
-    networks:
-        - rabbitmq_go_net
 
-  postgres:
-    image: postgres:14-alpine
-    ports:
-      - 5432:5432
-    volumes:
-      - ~/apps/postgres:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_PASSWORD=S3cret
-      - POSTGRES_USER=citizix_user
-      - POSTGRES_DB=fraud
 
 volumes:
-  cassandra-data:
-  cassandra-config:
-  elasticsearch-data:
   janusgraph-config:

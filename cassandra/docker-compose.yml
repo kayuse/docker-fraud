@@ -56,17 +56,6 @@ services:
     networks:
         - rabbitmq_go_net
 
-  postgres:
-    image: postgres:14-alpine
-    ports:
-      - 5432:5432
-    volumes:
-      - ~/apps/postgres:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_PASSWORD=S3cret
-      - POSTGRES_USER=citizix_user
-      - POSTGRES_DB=fraud
-
 volumes:
   cassandra-data:
   cassandra-config:
