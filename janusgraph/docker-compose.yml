@@ -19,8 +19,8 @@ services:
       - INDEX_HOSTNAME=48.217.122.65
       - INDEX_ELASTICSEARCH_USER=myuser
       - INDEX_ELASTICSEARCH_PASSWORD=mypassword
-      - JANUSGRAPH_MAX_HEAP_SIZE=3g
-      - JAVA_OPTIONS=-Xms3G -Xmx4G
+      - JANUSGRAPH_MAX_HEAP_SIZE=7g
+      - JAVA_OPTIONS=-Xms7G -Xmx7G
     ports:
       - "8182:8182"  # Gremlin Server default port
     networks:
