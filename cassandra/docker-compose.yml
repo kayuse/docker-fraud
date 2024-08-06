@@ -17,8 +17,8 @@ services:
       - CASSANDRA_DC=datacenter1
       - CASSANDRA_RACK=rack1
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-      - MAX_HEAP_SIZE=512M
-      - HEAP_NEWSIZE=256M
+      - MAX_HEAP_SIZE=2G
+      - HEAP_NEWSIZE=2G
       - CASSANDRA_USERNAME=cassandra
       - CASSANDRA_PASSWORD=cassandra
     ports:
@@ -34,7 +34,7 @@ services:
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - ES_JAVA_OPTS=-Xms1G -Xmx1G
       - ELASTICSEARCH_USERNAME=myuser
       - ELASTICSEARCH_PASSWORD=mypassword
     ports:
