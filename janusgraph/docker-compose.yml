@@ -9,14 +9,14 @@ services:
     container_name: janusgraph
     environment:
       - storage.backend=cassandra
-      - storage.hostname=48.217.122.65
+      - storage.hostname=108.129.88.172
       - graph.replace-instance-if-exists=true
       - storage.port=9042
       - storage.cql.keyspace=mykeyspace
       - storage.cassandra.username=cassandra
       - storage.cassandra.password=cassandra
       - INDEX_BACKEND=elasticsearch
-      - INDEX_HOSTNAME=48.217.122.65
+      - INDEX_HOSTNAME=108.129.88.172
       - INDEX_ELASTICSEARCH_USER=myuser
       - INDEX_ELASTICSEARCH_PASSWORD=mypassword
       - JANUSGRAPH_MAX_HEAP_SIZE=7g
@@ -25,9 +25,6 @@ services:
       - "8182:8182"  # Gremlin Server default port
     networks:
       - janusgraph-network
-    depends_on:
-      - cassandra
-      - elasticsearch
     volumes:
       - janusgraph-config:/janusgraph/config
 
