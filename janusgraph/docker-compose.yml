@@ -1,4 +1,3 @@
-version: "3"
 networks:
   janusgraph-network:
     driver: bridge
