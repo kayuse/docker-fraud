@@ -33,7 +33,7 @@ services:
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms1.5G -Xmx1.5G
+      - ES_JAVA_OPTS=-Xms1G -Xmx2G
       - ELASTICSEARCH_USERNAME=myuser
       - ELASTICSEARCH_PASSWORD=mypassword
     ports:
