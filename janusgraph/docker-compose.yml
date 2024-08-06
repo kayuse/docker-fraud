@@ -20,7 +20,7 @@ services:
       - INDEX_ELASTICSEARCH_USER=myuser
       - INDEX_ELASTICSEARCH_PASSWORD=mypassword
       - JANUSGRAPH_MAX_HEAP_SIZE=7g
-      - JAVA_OPTIONS=-Xms7G -Xmx7G
+      - JAVA_OPTIONS=-Xms6G -Xmx7G
     ports:
       - "8182:8182"  # Gremlin Server default port
     networks:
