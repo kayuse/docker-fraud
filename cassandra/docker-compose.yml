@@ -59,6 +59,9 @@ services:
     image: docker.elastic.co/kibana/kibana:8.15.0
     volumes:
       - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+    environment:
+      SERVER_NAME: kibana.example.org
+      ELASTICSEARCH_HOSTS: '["http://localhost:9200"]'
       
 volumes:
   cassandra-data:
