@@ -11,8 +11,9 @@ services:
       - storage.backend=cassandra
       - storage.hostname=108.129.88.172
       - storage.batch-loading=true
-      - storage.batch-size=8192
-      - storage.transaction.batch.size=5000
+      - storage.batch-size=5000
+      - storage.buffer.size=8192
+      - storage.transaction.batch.size=10000
       - storage.transaction.timeout=60
       - graph.replace-instance-if-exists=true
       - storage.port=9042
