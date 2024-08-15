@@ -55,6 +55,11 @@ services:
     networks:
         - rabbitmq_go_net
 
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.15.0
+    volumes:
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+      
 volumes:
   cassandra-data:
   cassandra-config:
