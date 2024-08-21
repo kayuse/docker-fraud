@@ -7,33 +7,21 @@ services:
   janusgraph:
     image: janusgraph/janusgraph:latest
     container_name: janusgraph
-    environment:
-      - storage.backend=cassandra
-      - storage.hostname=108.129.88.172
-      - storage.batch-loading=true
-      - storage.batch-size=5000
-      - storage.buffer.size=8192
-      - storage.transaction.batch.size=10000
-      - storage.transaction.timeout=60
-      - graph.replace-instance-if-exists=true
-      - storage.port=9042
-      - storage.cql.keyspace=mykeyspace
-      - storage.cassandra.username=cassandra
-      - storage.cassandra.password=cassandra
-      - INDEX_BACKEND=elasticsearch
-      - INDEX_HOSTNAME=108.129.88.172
-      - INDEX_ELASTICSEARCH_USER=myuser
-      - INDEX_ELASTICSEARCH_PASSWORD=mypassword
-      - JANUSGRAPH_MAX_HEAP_SIZE=6g
-      - JAVA_OPTIONS=-Xms5G -Xmx6G
     ports:
       - "8182:8182"  # Gremlin Server default port
     networks:
       - janusgraph-network
     volumes:
-      - janusgraph-config:/janusgraph/config
+      - ./janusgraph.properties:/opt/janusgraph/conf/janusgraph.properties
 
-
+  gremlin-console:
+    image: tinkerpop/gremlin-console:3.6.0
+    container_name: gremlin-console
+    depends_on:
+      - janusgraph
+    entrypoint: ["/bin/sh", "-c", "sleep 30; /opt/apache-tinkerpop-gremlin-console/bin/gremlin.sh"]
+    networks:
+      - janusgraph-network
 
 volumes:
   janusgraph-config:
