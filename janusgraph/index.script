@@ -1,0 +1,29 @@
+[Indexing]
+graph.tx().rollback()
+mgmt = graph.openManagement()
+accountIdKey = mgmt.makePropertyKey('Transaction').dataType(String.class).make()
+accountId = mgmt.getPropertyKey('Transaction')
+accountId2 = mgmt.getPropertyKey('PlatformId')
+mgmt.buildIndex('Transaction', Vertex.class).addKey(accountId).addKey(accountId2).buildCompositeIndex()
+mgmt.buildIndex('PlatformId', Vertex.class).addKey(accountId2).buildCompositeIndex()
+
+ManagementSystem.awaitGraphIndexStatus(graph, 'CustomerId').call()
+mgmt.updateIndex(mgmt.getGraphIndex("CustomerId"), SchemaAction.REINDEX).get()
+
+g.V().has('CustomerId','wwwasjnads')
+
+index = mgmt.getGraphIndex('CustomerId')
+ManagementSystem.awaitGraphIndexStatus(graph, 'CustomerId').status(SchemaStatus.ENABLED)
+
+vertex = g.V().has('CustomerId', 'wwwasjnads').next()
+
+
+mgmt.buildIndex('TransactionIndex', Vertex.class).addKey(platformIdKey).indexOnly(transactionLabel).buildMixedIndex()
+:remote connect tinkerpop.server conf/remote.yaml session
+:remote config timeout 7200000
+g.addV("Customer").property("CustomerId", "wwwasjnads").property("Name", "SSS").property("Phone", "sss").property("Email", "sss@sss").as("C1" + "ssss").iterate();
+g.addV("Account").property("AccountId", "SSS").property("AccountNumber", "0012222").property("BankCode", "035").property("Country", "2222").property("Balance", "SSSS")
+g.addV("Transaction").property("PlatformId", "jhgfghjkjh").property("TransactionId", "jhgfghjhg").property("Amount", 20000).iterate();
+
+
+mgmt.buildIndex('CustomerId', Vertex.class).addKey(customerIdKey).indexOnly(customerLabel)  // Index only for the Customer label.buildCompositeIndex()

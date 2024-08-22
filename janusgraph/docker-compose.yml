@@ -14,7 +14,7 @@ services:
       - storage.batch-size=5000
       - storage.buffer.size=8192
       - storage.transaction.batch.size=10000
-      - storage.transaction.timeout=60
+      - storage.transaction.timeout=3660
       - graph.replace-instance-if-exists=true
       - storage.port=9042
       - storage.cql.keyspace=mykeyspace
