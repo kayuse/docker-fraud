@@ -8,7 +8,7 @@ services:
     image: janusgraph/janusgraph:latest
     container_name: janusgraph
     environment:
-      - storage.backend=cassandra
+      - storage.backend=cql
       - storage.hostname=108.129.88.172
       - storage.batch-loading=true
       - storage.batch-size=5000
@@ -20,10 +20,17 @@ services:
       - storage.cql.keyspace=mykeyspace
       - storage.cassandra.username=cassandra
       - storage.cassandra.password=cassandra
+      - cache.db-cache = true
+      - cache.db-cache-clean-wait = 20
+      - cache.db-cache-time = 180000
+      - cache.db-cache-size = 0.25
+      - index.search.backend=elasticsearch
+      - index.search.hostname=108.129.88.172
+      - index.search.elasticsearch.client-only=true
+      - storage.directory=/var/lib/janusgraph/data
+      - index.search.directory=/var/lib/janusgraph/index
       - INDEX_BACKEND=elasticsearch
       - INDEX_HOSTNAME=108.129.88.172
-      - INDEX_ELASTICSEARCH_USER=myuser
-      - INDEX_ELASTICSEARCH_PASSWORD=mypassword
       - JANUSGRAPH_MAX_HEAP_SIZE=6g
       - JAVA_OPTIONS=-Xms8G -Xmx14G
     ports:
