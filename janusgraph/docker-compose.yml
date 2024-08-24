@@ -8,7 +8,7 @@ services:
     image: janusgraph/janusgraph:latest
     container_name: janusgraph
     environment:
-      - storage.backend=cql
+      - storage.backend=cassandra
       - storage.hostname=108.129.88.172
       - storage.batch-loading=true
       - storage.batch-size=5000
