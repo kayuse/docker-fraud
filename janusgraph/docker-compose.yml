@@ -1,63 +1,46 @@
-# Copyright 2023 JanusGraph Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-version: "3"
+networks:
+  janusgraph-network:
+    driver: bridge
 
 services:
+
   janusgraph:
-    image: docker.io/janusgraph/janusgraph:latest
-    container_name: jce-janusgraph
+    image: janusgraph/janusgraph:latest
+    container_name: janusgraph
     environment:
-      JANUS_PROPS_TEMPLATE: cql-es
-      janusgraph.storage.hostname: 108.129.88.172
-      janusgraph.index.search.hostname: 108.129.88.172
+      - storage.backend=cql
+      - storage.hostname=108.129.88.172
+      - storage.batch-loading=true
+      - storage.batch-size=5000
+      - storage.buffer.size=8192
+      - storage.transaction.batch.size=10000
+      - storage.transaction.timeout=3660
+      - graph.replace-instance-if-exists=true
+      - storage.port=9042
+      - storage.cql.keyspace=mykeyspace
+      - storage.cassandra.username=cassandra
+      - storage.cassandra.password=cassandra
+      - cache.db-cache = true
+      - cache.db-cache-clean-wait = 20
+      - cache.db-cache-time = 180000
+      - cache.db-cache-size = 0.25
+      - index.search.backend=elasticsearch
+      - index.search.hostname=108.129.88.172
+      - index.search.elasticsearch.client-only=true
+      - storage.directory=/var/lib/janusgraph/data
+      - index.search.directory=/var/lib/janusgraph/index
+      - INDEX_BACKEND=elasticsearch
+      - INDEX_HOSTNAME=108.129.88.172
+      - JANUSGRAPH_MAX_HEAP_SIZE=6g
+      - JAVA_OPTIONS=-Xms8G -Xmx14G
     ports:
-      - "8182:8182"
+      - "8182:8182"  # Gremlin Server default port
     networks:
-      - jce-network
-    healthcheck:
-      test: ["CMD", "bin/gremlin.sh", "-e", "scripts/remote-connect.groovy"]
-      interval: 10s
-      timeout: 30s
-      retries: 3
+      - janusgraph-network
+    volumes:
+      - janusgraph-config:/janusgraph/config
 
-  cassandra:
-    image: cassandra:3
-    container_name: jce-cassandra
-    ports:
-      - "9042:9042"
-      - "9160:9160"
-    networks:
-      - jce-network
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.6.0
-    container_name: jce-elastic
-    environment:
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - "http.host=0.0.0.0"
-      - "network.host=0.0.0.0"
-      - "transport.host=127.0.0.1"
-      - "cluster.name=docker-cluster"
-      - "xpack.security.enabled=false"
-      - "discovery.zen.minimum_master_nodes=1"
-    ports:
-      - "9200:9200"
-    networks:
-      - jce-network
 
-networks:
-  jce-network:
 volumes:
-  janusgraph-default-data:
+  janusgraph-config:
