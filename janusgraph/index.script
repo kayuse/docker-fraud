@@ -2,17 +2,20 @@
 graph.tx().rollback()
 mgmt = graph.openManagement()
 accountIdKey = mgmt.makePropertyKey('Transaction').dataType(String.class).make()
-accountId = mgmt.getPropertyKey('CustomerId')
+accountId = mgmt.getPropertyKey('AccountId')
+account = mgmt.getVertexLabel('Account')
+mgmt.buildIndex('PlatformId', Vertex.class).addKey(accountId).indexOnly(account).buildCompositeIndex()
+
 indexName  = 'CustomerId'
 accountId2 = mgmt.getPropertyKey(indexName)
 mgmt.buildIndex('CustomerId', Vertex.class).addKey(accountId).addKey(accountId2).buildCompositeIndex()
 mgmt.buildIndex('CustomerId', Vertex.class).addKey(accountId2).buildCompositeIndex()
 
-mgmt.buildIndex('CustomerAndCustomerId', Vertex.class).addKey(name).indexOnly(god).buildCompositeIndex()
+mgmt.buildIndex('TransactionAndPlatforId', Vertex.class).addKey(name).indexOnly(god).buildCompositeIndex()
 
 mgmt.commit()
 
-ManagementSystem.awaitGraphIndexStatus(graph, 'CustomerId').call()
+ManagementSystem.awaitGraphIndexStatus(graph, 'TransactionAndPlatforId').call()
 mgmt.updateIndex(mgmt.getGraphIndex("CustomerId"), SchemaAction.REINDEX).get()
 
 g.V().has('CustomerId','wwwasjnads')
