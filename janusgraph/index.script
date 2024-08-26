@@ -9,7 +9,10 @@ mgmt.buildIndex('PlatformId', Vertex.class).addKey(accountId).indexOnly(account)
 indexName  = 'CustomerId'
 accountId2 = mgmt.getPropertyKey(indexName)
 mgmt.buildIndex('CustomerId', Vertex.class).addKey(accountId).addKey(accountId2).buildCompositeIndex()
-mgmt.buildIndex('CustomerId', Vertex.class).addKey(accountId2).buildCompositeIndex()
+mgmt.buildIndex('CustomerId', Vertex.class).addKey(accountId).buildCompositeIndex()
+
+mgmt.buildIndex('AccountId', Vertex.class).addKey(accountId).buildMixedIndex("search")
+
 
 mgmt.buildIndex('TransactionAndPlatforId', Vertex.class).addKey(name).indexOnly(god).buildCompositeIndex()
 
@@ -35,3 +38,7 @@ g.addV("Transaction").property("PlatformId", "jhgfghjkjh").property("Transaction
 
 
 mgmt.buildIndex('CustomerId', Vertex.class).addKey(customerIdKey).indexOnly(customerLabel)  // Index only for the Customer label.buildCompositeIndex()
+
+
+
+bin/gremlin-server.sh install com.orientechnologies orientdb-gremlin 3.2.32

@@ -22,6 +22,7 @@ services:
       JANUS_PROPS_TEMPLATE: cql-es
       janusgraph.storage.hostname: 108.129.88.172
       janusgraph.index.search.hostname: 108.129.88.172
+      janusgraph.replace-instance-if-exists: true
     ports:
       - "8182:8182"
     networks:
