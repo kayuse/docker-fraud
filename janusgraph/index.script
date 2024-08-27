@@ -2,24 +2,25 @@
 graph.tx().rollback()
 mgmt = graph.openManagement()
 accountIdKey = mgmt.makePropertyKey('Transaction').dataType(String.class).make()
-accountId = mgmt.getPropertyKey('AccountId')
+attribute = mgmt.getPropertyKey('ProfileId')
 account = mgmt.getVertexLabel('Account')
 mgmt.buildIndex('PlatformId', Vertex.class).addKey(accountId).indexOnly(account).buildCompositeIndex()
 
 indexName  = 'CustomerId'
 accountId2 = mgmt.getPropertyKey(indexName)
 mgmt.buildIndex('CustomerId', Vertex.class).addKey(accountId).addKey(accountId2).buildCompositeIndex()
-mgmt.buildIndex('CustomerId', Vertex.class).addKey(accountId).buildCompositeIndex()
+mgmt.buildIndex('ProfileIdComposite', Vertex.class).addKey(attribute).buildCompositeIndex()
 
 mgmt.buildIndex('AccountId', Vertex.class).addKey(accountId).buildMixedIndex("search")
 
 
 mgmt.buildIndex('TransactionAndPlatforId', Vertex.class).addKey(name).indexOnly(god).buildCompositeIndex()
 
+
 mgmt.commit()
 
-ManagementSystem.awaitGraphIndexStatus(graph, 'TransactionAndPlatforId').call()
-mgmt.updateIndex(mgmt.getGraphIndex("CustomerId"), SchemaAction.REINDEX).get()
+ManagementSystem.awaitGraphIndexStatus(graph, 'ProfileIdComposite').call()
+mgmt.updateIndex(mgmt.getGraphIndex("ProfileIdComposite"), SchemaAction.REINDEX).get()
 
 g.V().has('CustomerId','wwwasjnads')
 
@@ -28,9 +29,11 @@ ManagementSystem.awaitGraphIndexStatus(graph, 'CustomerId').status(SchemaStatus.
 
 vertex = g.V().has('CustomerId', 'wwwasjnads').next()
 
+g.tx().commit()
 
 mgmt.buildIndex('TransactionIndex', Vertex.class).addKey(platformIdKey).indexOnly(transactionLabel).buildMixedIndex()
-:remote connect tinkerpop.server conf/remote.yaml session
+    mgmt = graph.openManagement()
+
 :remote config timeout 7200000
 g.addV("Customer").property("CustomerId", "wwwasjnads").property("Name", "SSS").property("Phone", "sss").property("Email", "sss@sss").as("C1" + "ssss").iterate();
 g.addV("Account").property("AccountId", "SSS").property("AccountNumber", "0012222").property("BankCode", "035").property("Country", "2222").property("Balance", "SSSS")
