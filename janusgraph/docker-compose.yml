@@ -21,12 +21,18 @@ services:
     environment:
       JANUS_PROPS_TEMPLATE: cql-es
       janusgraph.storage.hostname: 108.129.88.172
+      janusgraph.storage.parallel-backend-ops: true
       janusgraph.index.search.hostname: 108.129.88.172
       janusgraph.replace-instance-if-exists: true
     ports:
       - "8182:8182"
     networks:
       - jce-network
+    deploy:
+      resources:
+        limits:
+          memory: 14G
+          cpus: "2.0"
     healthcheck:
       test: ["CMD", "bin/gremlin.sh", "-e", "scripts/remote-connect.groovy"]
       interval: 10s
