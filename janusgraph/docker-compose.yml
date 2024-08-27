@@ -32,11 +32,6 @@ services:
         limits:
           memory: 14G
           cpus: "2.0"
-    healthcheck:
-      test: ["CMD", "bin/gremlin.sh", "-e", "scripts/remote-connect.groovy"]
-      interval: 10s
-      timeout: 30s
-      retries: 3
 
 networks:
   jce-network:
