@@ -1,0 +1,81 @@
+version: '3.7'
+services:
+  # Zookeeper
+  zookeeper:
+    container_name: zookeeper
+    image: zookeeper:3.7
+    ports:
+      - 2181:2181
+    networks:
+      - kaspelki-net
+
+  # Kafka (with integrated Zookeeper support)
+  kafka:
+    container_name: kafka
+    image: confluentinc/cp-kafka:7.2.1
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+    ports:
+      - 9092:9092
+    networks:
+      - kaspelki-net
+    depends_on:
+      - zookeeper
+
+  # Spark (contains all daemons)
+  spark:
+    container_name: spark
+    build: ./spark
+    command: bash
+    links:
+      - kafka
+    ports:
+      - 8080:8080
+      - 7077:7077
+      - 6066:6066
+      - 4040:4040
+    environment:
+      - SPARK_MASTER_HOST=spark
+      - SPARK_MASTER_PORT=7077
+    env_file:
+      - ./hadoop/hadoop.env
+    tty: true
+    volumes:
+      - ./scripts/spark:/app
+    networks:
+      - kaspelki-net
+
+  # Elasticsearch
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - 9200:9200
+    networks:
+      - kaspelki-net
+    volumes:
+      - data:/usr/share/elasticsearch/data
+
+  # Kibana
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:8.9.0
+    ports:
+      - 5601:5601
+    networks:
+      - kaspelki-net
+    depends_on:
+      - elasticsearch
+
+### --- volumes --- ###
+volumes:
+  data:
+networks:
+  kaspelki-net:
+    name: kaspelki-net

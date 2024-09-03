@@ -2,14 +2,14 @@
 graph.tx().rollback()
 mgmt = graph.openManagement()
 accountIdKey = mgmt.makePropertyKey('Transaction').dataType(String.class).make()
-attribute = mgmt.getPropertyKey('ProfileId')
-account = mgmt.getVertexLabel('Account')
-mgmt.buildIndex('PlatformId', Vertex.class).addKey(accountId).indexOnly(account).buildCompositeIndex()
+attribute = mgmt.getPropertyKey('PlatformId')
+account = mgmt.getVertexLabel('PlatformId')
+mgmt.buildIndex('PlatformIdComposite', Vertex.class).addKey(accountId).indexOnly(account).buildCompositeIndex()
 
 indexName  = 'CustomerId'
 accountId2 = mgmt.getPropertyKey(indexName)
-mgmt.buildIndex('CustomerId', Vertex.class).addKey(accountId).addKey(accountId2).buildCompositeIndex()
-mgmt.buildIndex('ProfileIdComposite', Vertex.class).addKey(attribute).buildCompositeIndex()
+mgmt.buildIndex('CustomerId', Vertex.class).addKey(attribute).addKey(accountId).buildCompositeIndex()
+mgmt.buildIndex('PlatformIndexComposite', Vertex.class).addKey(attribute).unique().buildCompositeIndex()
 
 mgmt.buildIndex('AccountId', Vertex.class).addKey(accountId).buildMixedIndex("search")
 
@@ -19,13 +19,13 @@ mgmt.buildIndex('TransactionAndPlatforId', Vertex.class).addKey(name).indexOnly(
 
 mgmt.commit()
 
-ManagementSystem.awaitGraphIndexStatus(graph, 'ProfileIdComposite').call()
-mgmt.updateIndex(mgmt.getGraphIndex("ProfileIdComposite"), SchemaAction.REINDEX).get()
+ManagementSystem.awaitGraphIndexStatus(graph, 'PlatformIndexComposite').call()
+mgmt.updateIndex(mgmt.getGraphIndex("PlatformIndexComposite"), SchemaAction.REINDEX).get()
 
 g.V().has('CustomerId','wwwasjnads')
 
 index = mgmt.getGraphIndex('CustomerId')
-ManagementSystem.awaitGraphIndexStatus(graph, 'CustomerId').status(SchemaStatus.ENABLED)
+ManagementSystem.awaitGraphIndexStatus(graph, 'ObservatoryAndPlatformId').status(SchemaStatus.REGISTERED)
 
 vertex = g.V().has('CustomerId', 'wwwasjnads').next()
 
@@ -33,8 +33,11 @@ g.tx().commit()
 
 mgmt.buildIndex('TransactionIndex', Vertex.class).addKey(platformIdKey).indexOnly(transactionLabel).buildMixedIndex()
     mgmt = graph.openManagement()
-
+:remote connect tinkerpop.server conf/remote.yaml session
 :remote config timeout 7200000
+mgmt.updateIndex(mgmt.getGraphIndex("ObservatoryAndPlatformId"), SchemaAction.REINDEX).get()
+
+
 g.addV("Customer").property("CustomerId", "wwwasjnads").property("Name", "SSS").property("Phone", "sss").property("Email", "sss@sss").as("C1" + "ssss").iterate();
 g.addV("Account").property("AccountId", "SSS").property("AccountNumber", "0012222").property("BankCode", "035").property("Country", "2222").property("Balance", "SSSS")
 g.addV("Transaction").property("PlatformId", "jhgfghjkjh").property("TransactionId", "jhgfghjhg").property("Amount", 20000).iterate();
