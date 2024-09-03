@@ -23,32 +23,6 @@ services:
     networks:
       - spark-net
 
-  # Elasticsearch
-  elasticsearch:
-    container_name: elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.1
-    environment:
-      - node.name=elasticsearch
-      - cluster.name=elasticsearch-cluster
-      - discovery.type=single-node
-    ports:
-      - "9200:9200"
-    networks:
-      - spark-net
-
-  # Kibana
-  kibana:
-    container_name: kibana
-    image: docker.elastic.co/kibana/kibana:8.8.1
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    ports:
-      - "5601:5601"
-    networks:
-      - spark-net
-    depends_on:
-      - elasticsearch
-
 networks:
   spark-net:
     driver: bridge
