@@ -1,4 +1,27 @@
 services:
+  services:
+  # Spark Master
+  spark-master:
+    container_name: spark-master
+    image: bitnami/spark:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - SPARK_MODE=master
+      - SPARK_MASTER_HOST=spark-master
+    networks:
+      - spark-net
+
+  # Spark Worker
+  spark-worker:
+    container_name: spark-worker
+    image: bitnami/spark:latest
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    networks:
+      - spark-net
+
   elasticsearch:
     container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:8.7.1
@@ -45,3 +68,5 @@ services:
 
 networks:
   elastic:
+  spark-net:
+    driver: bridge
