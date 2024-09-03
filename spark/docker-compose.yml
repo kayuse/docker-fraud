@@ -41,7 +41,7 @@ services:
       - SPARK_MASTER_HOST=spark
       - SPARK_MASTER_PORT=7077
     env_file:
-      - ./hadoop/hadoop.env
+      - ./hadoop.env
     tty: true
     volumes:
       - ./scripts/spark:/app
