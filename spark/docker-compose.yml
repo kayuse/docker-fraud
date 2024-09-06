@@ -45,25 +45,25 @@ services:
   #           cpus: '1.0'
 
   # kibana:
-    image: docker.elastic.co/kibana/kibana:8.7.1
-    container_name: kibana
-    environment:
-      XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY: d1a66dfd-c4d3-4a0a-8290-2abcb83ab3aa
-      ELASTICSEARCH_HOSTS: "http://elasticsearch:9200"
-      CLI_JAVA_OPTS: -Xms3g -Xmx4g
-      bootstrap.memory_lock: true
-      discovery.type: single-node
-      xpack.security.enabled: false
-    ports:
-      - 5601:5601
-    networks:
-      - elastic
-    deploy:    
-      resources:
-          limits:
-            cpus: '2.0'
-          reservations:
-            cpus: '1.0'
+    # image: docker.elastic.co/kibana/kibana:8.7.1
+    # container_name: kibana
+    # environment:
+    #   XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY: d1a66dfd-c4d3-4a0a-8290-2abcb83ab3aa
+    #   ELASTICSEARCH_HOSTS: "http://elasticsearch:9200"
+    #   CLI_JAVA_OPTS: -Xms3g -Xmx4g
+    #   bootstrap.memory_lock: true
+    #   discovery.type: single-node
+    #   xpack.security.enabled: false
+    # ports:
+    #   - 5601:5601
+    # networks:
+    #   - elastic
+    # deploy:    
+    #   resources:
+    #       limits:
+    #         cpus: '2.0'
+    #       reservations:
+    #         cpus: '1.0'
 
 networks:
   # elastic:
