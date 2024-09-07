@@ -4,13 +4,9 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.7.1
     # 8.x
     environment: 
-      - node.name=node1
-      - cluster.name=my-cluster
       - discovery.type=single-node
       - network.host=0.0.0.0
       - xpack.security.enabled=false
-      - discovery.seed_hosts:3.253.35.132
-      - cluster.initial_master_nodes=node1
 
 
     ports:
