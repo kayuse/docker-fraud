@@ -1,0 +1,8 @@
+spark-submit --master spark://54.246.202.86:7077 --jars /Users/kay/Documents/fraud/python/jar_files/elasticsearchspark.jar  --deploy-mode client  graph_etl.py
+
+spark-submit --master spark://54.246.202.86:7077 --jars /Users/kay/Documents/fraud/python/jar_files/elasticsearchspark.jar  --deploy-mode client  graph_etl.py
+
+spark-submit --jars /Users/kay/Documents/fraud/python/jar_files/elasticsearchspark.jar   graph_etl.py
+
+
+
