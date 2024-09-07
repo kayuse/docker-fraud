@@ -1,44 +1,45 @@
 services:
-  # elasticsearch:
-  #   container_name: elasticsearch
-  #   image: docker.elastic.co/elasticsearch/elasticsearch:8.7.1
-  #   # 8.x
-  #   environment: 
-  #     - node.name=node1
-  #     - cluster.name=my-cluster
-  #     - discovery.type=single-node
-  #     - network.host=0.0.0.0
-  #     - xpack.security.enabled=false
-  #     - discovery.seed_hosts:3.253.35.132:9200
-  #     - cluster.initial_master_nodes=node1
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.7.1
+    # 8.x
+    environment: 
+      - node.name=node1
+      - cluster.name=my-cluster
+      - discovery.type=single-node
+      - network.host=0.0.0.0
+      - xpack.security.enabled=false
+      - discovery.seed_hosts:3.253.35.132:9200
+      - cluster.initial_master_nodes=node1
+      - http.enabled=true
 
 
-  #   ports:
-  #     - 9200:9200
-  #   volumes:
-  #     - es_data:/usr/share/elasticsearch/data
-  #   networks:
-  #     - es_network
-  #   ulimits:
-  #     memlock:
-  #       soft: -1
-  #       hard: -1
-  #     nofile:
-  #       soft: 65536
-  #       hard: 65536
-  #   deploy:    
-  #     resources:
-  #         limits:
-  #           cpus: '2.0'
-  #         reservations:
-  #           cpus: '1.0'
+    ports:
+      - 9200:9200
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - es_network
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    deploy:    
+      resources:
+          limits:
+            cpus: '2.0'
+          reservations:
+            cpus: '1.0'
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.7.1
     container_name: kibana
     environment:
       XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY: d1a66dfd-c4d3-4a0a-8290-2abcb83ab3aa
-      ELASTICSEARCH_HOSTS: "http://127.0.0.1:9200"
+      ELASTICSEARCH_HOSTS: "http://elasticsearch:9200"
       CLI_JAVA_OPTS: -Xms3g -Xmx4g
       bootstrap.memory_lock: true
       discovery.type: single-node
