@@ -8,6 +8,8 @@ services:
       - network.host=0.0.0.0
     ports:
       - 9200:9200
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
     networks:
       - es_network
     ulimits:
@@ -48,3 +50,7 @@ services:
 networks:
   es_network:
     driver: bridge
+
+volumes:
+  es_data:
+    driver: local
