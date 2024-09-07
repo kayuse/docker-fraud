@@ -7,6 +7,8 @@ services:
       - discovery.type=single-node
       - network.host=0.0.0.0
       - xpack.security.enabled=false
+      - discovery.seed_hosts: ["3.253.35.132:9200", "3.253.35.132:9300"]
+
 
     ports:
       - 9200:9200
