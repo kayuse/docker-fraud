@@ -7,11 +7,7 @@ services:
       - discovery.type=single-node
       - network.host=0.0.0.0
       - xpack.security.enabled=false
-      - xpack.monitoring.enabled=false
-      - xpack.ml.enabled=false
-      - xpack.graph.enabled=false
-      - xpack.watcher.enabled=false
-      
+
     ports:
       - 9200:9200
     volumes:
