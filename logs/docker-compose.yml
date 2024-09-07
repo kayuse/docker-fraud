@@ -5,7 +5,7 @@ services:
     # 8.x
     environment: 
       - discovery.type=single-node
-      - network.host=0.0.0.0
+      - network.host=3.253.35.132
       - xpack.security.enabled=false
 
     ports:
