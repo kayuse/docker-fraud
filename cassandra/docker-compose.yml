@@ -1,54 +1,37 @@
-networks:
-  kafka-net:
-    driver: bridge
-  janusgraph-network:
-    driver: bridge
-  rabbitmq_go_net:
-    driver: bridge
-  jce-network:
-
 services:
-  cassandra:
-    image: cassandra:3
-    container_name: jce-cassandra
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
     environment:
-      - concurrent_writes: 32
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - "9042:9042"
-      - "9160:9160"
-    networks:
-      - jce-network
+      - "2181:2181"
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.6.0
-    container_name: jce-elastic
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
     environment:
-      - "ES_JAVA_OPTS=-Xms1g -Xmx1512m"
-      - "http.host=0.0.0.0"
-      - "network.host=0.0.0.0"
-      - "transport.host=127.0.0.1"
-      - "cluster.name=docker-cluster"
-      - "xpack.security.enabled=false"
-      - "discovery.zen.minimum_master_nodes=1"
-    ports:
-      - "9200:9200"
-    networks:
-      - jce-network
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    container_name: 'rabbitmq'
-    ports:
-        - 5672:5672
-        - 15672:15672
-    volumes:
-        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
-    networks:
-        - rabbitmq_go_net
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 
-volumes:
-  cassandra-data:
-  cassandra-config:
-  elasticsearch-data:
-  janusgraph-config:
-
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    container_name: kafdrop
+    ports:
+      - "9000:9000"
+    environment:
+      KAFKA_BROKERCONNECT: kafka:9092
+      JVM_OPTS: "-Xms1G -Xmx2G"
+    depends_on:
+      - kafka
+    command: ["--message.format=AVRO"]
